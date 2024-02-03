@@ -8,7 +8,20 @@
 #include "frame_compare.h"
 #include "frame_home.h"
 
-enum { kKeyFactoryTest = 0, kKeySetting, kKeyKeyboard, kKeyWifiScan, kKeySDFile, kKeyCompare, kKeyHome, kKeyLifeGame };
+enum {
+  kKeyFactoryTest = 0,
+  kKeySetting,
+  kKeyKeyboard,
+  kKeyWifiScan,
+  kKeySDFile,
+  kKeyCompare,
+  kKeyHome,
+  kKeyLifeGame,
+  kKeyContinue,
+  kKeyNewGame,
+  kKeyMyGames,
+  kKeyPuzzles
+};
 
 #define KEY_W 92
 #define KEY_H 92
@@ -89,6 +102,20 @@ void key_home_cb(epdgui_args_vector_t &args) {
   *((int *)(args[0])) = 0;
 }
 
+/**
+ * Will open the last game of chess
+ * @brief Continue an existing game of chess
+ */
+void key_continue_cb(epdgui_args_vector_t &args) {
+  Frame_Base *frame = EPDGUI_GetFrame("Frame_Home");
+  if (frame == NULL) {
+    frame = new Frame_Home();
+    EPDGUI_AddFrame("Frame_Home", frame);
+  }
+  EPDGUI_PushFrame(frame);
+  *((int *)(args[0])) = 0;
+}
+
 Frame_Main::Frame_Main(void) : Frame_Base(false) {
   _frame_name = "Frame_Main";
   _frame_id = 1;
@@ -101,12 +128,20 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
   _names->createCanvas(540, 32);
   _names->setTextDatum(CC_DATUM);
 
+  // Length of the array is defined in the header file
+  // Draw the first row of buttons
   for (int i = 0; i < 4; i++) {
-    _key[i] = new EPDGUI_Button("测试", 20 + i * 136, 90, KEY_W, KEY_H);
+    _key[i] = new EPDGUI_Button("ROW1", 20 + i * 136, 90, KEY_W, KEY_H);
   }
 
+  // Draw the second row of buttons
   for (int i = 0; i < 4; i++) {
-    _key[i + 4] = new EPDGUI_Button("测试", 20 + i * 136, 240, KEY_W, KEY_H);
+    _key[i + 4] = new EPDGUI_Button("ROW2", 20 + i * 136, 240, KEY_W, KEY_H);
+  }
+
+  // Draw the 3rd row of buttons
+  for (int i = 0; i < 4 i++) {
+    _key[i + 8] = new EPDGUI_Button("ROW3", 20 + i * 136, 390, KEY_W, KEY_H);
   }
 
   _key[kKeySetting]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_setting_92x92);
@@ -133,12 +168,6 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
   _key[kKeyWifiScan]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
   _key[kKeyWifiScan]->Bind(EPDGUI_Button::EVENT_RELEASED, key_wifiscan_cb);
 
-  _key[kKeyLifeGame]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_lifegame_92x92);
-  *(_key[kKeyLifeGame]->CanvasPressed()) = *(_key[kKeyLifeGame]->CanvasNormal());
-  _key[kKeyLifeGame]->CanvasPressed()->ReverseColor();
-  _key[kKeyLifeGame]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
-  _key[kKeyLifeGame]->Bind(EPDGUI_Button::EVENT_RELEASED, key_lifegame_cb);
-
   _key[kKeySDFile]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_sdcard_92x92);
   *(_key[kKeySDFile]->CanvasPressed()) = *(_key[kKeySDFile]->CanvasNormal());
   _key[kKeySDFile]->CanvasPressed()->ReverseColor();
@@ -157,13 +186,50 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
   _key[kKeyHome]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
   _key[kKeyHome]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
 
+  _key[kKeyLifeGame]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_lifegame_92x92);
+  *(_key[kKeyLifeGame]->CanvasPressed()) = *(_key[kKeyLifeGame]->CanvasNormal());
+  _key[kKeyLifeGame]->CanvasPressed()->ReverseColor();
+  _key[kKeyLifeGame]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
+  _key[kKeyLifeGame]->Bind(EPDGUI_Button::EVENT_RELEASED, key_lifegame_cb);
+
+  // Continue an existing game of chess
+  _key[kKeyContinue]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
+  *(_key[kKeyContinue]->CanvasPressed()) = *(_key[kKeyContinue]->CanvasNormal());
+  _key[kKeyContinue]->CanvasPressed()->ReverseColor();
+  _key[kKeyContinue]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
+  _key[kKeyContinue]->Bind(EPDGUI_Button::EVENT_RELEASED, key_continue_cb);
+
+  _key[kKeyNewGame]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
+  *(_key[kKeyNewGame]->CanvasPressed()) = *(_key[kKeyNewGame]->CanvasNormal());
+  _key[kKeyNewGame]->CanvasPressed()->ReverseColor();
+  _key[kKeyNewGame]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
+  _key[kKeyNewGame]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
+
+  _key[kKeyMyGames]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
+  *(_key[kKeyMyGames]->CanvasPressed()) = *(_key[kKeyMyGames]->CanvasNormal());
+  _key[kKeyMyGames]->CanvasPressed()->ReverseColor();
+  _key[kKeyMyGames]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
+  _key[kKeyMyGames]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
+
+  _key[kKeyPuzzles]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
+  *(_key[kKeyPuzzles]->CanvasPressed()) = *(_key[kKeyPuzzles]->CanvasNormal());
+  _key[kKeyPuzzles]->CanvasPressed()->ReverseColor();
+  _key[kKeyPuzzles]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
+  _key[kKeyPuzzles]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
+
   _time = 0;
   _next_update_time = 0;
 }
 
 Frame_Main::~Frame_Main(void) {
-  for (int i = 0; i < 8; i++) {
+
+  // Get the numer of keys, loop and delete them
+  // Assuming _key is an array of pointers
+  int leng = sizeof(_key) / sizeof(_key[0]);
+
+  for (int i = 0; i < leng; i++) {
     delete _key[i];
+    _key[i] = nullptr; // It's a good practice to set deleted pointers to nullptr
   }
 }
 
@@ -204,6 +270,7 @@ void Frame_Main::AppName(m5epd_update_mode_t mode) {
   _names->drawString("My Games", 20 + 46 + 2 * 136, 16); // col 3
   _names->drawString("Puzzles", 20 + 46 + 3 * 136, 16);  // col 4
 
+  // Push the above text to the canvas at x == 0, y == 337
   _names->pushCanvas(0, 488, mode);
 }
 
@@ -270,7 +337,10 @@ int Frame_Main::init(epdgui_args_vector_t &args) {
   // Screen is 960 * 540, make the display emptry before we draw on it
   M5.EPD.Clear(true);
 
-  for (int i = 0; i < 8; i++) {
+  // Get the length of the _key array
+  int leng = sizeof(_key) / sizeof(_key[0]);
+
+  for (int i = 0; i < leng; i++) {
     EPDGUI_AddObject(_key[i]);
   }
   _time = 0;

@@ -3,6 +3,8 @@
 
 #include "frame_base.h"
 
+static int KEY_SIZE = 12;
+
 class Frame_Main : public Frame_Base {
    public:
     Frame_Main();
@@ -13,7 +15,7 @@ class Frame_Main : public Frame_Base {
     void AppName(m5epd_update_mode_t mode);
 
    private:
-    EPDGUI_Button *_key[8];
+    EPDGUI_Button *_key[KEY_SIZE];
     M5EPD_Canvas *_bar;
     M5EPD_Canvas *_names;
     uint32_t _next_update_time;
