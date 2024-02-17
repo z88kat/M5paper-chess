@@ -53,7 +53,7 @@ void SysInit_Start(void) {
     bool ret = false;
     Serial.begin(115200);
     Serial.flush();
-    delay(50);
+    delay(50);  // Takes a moment for the serial port to initialize
     Serial.print("M5EPD initializing...");
 
     pinMode(M5EPD_EXT_PWR_EN_PIN, OUTPUT);

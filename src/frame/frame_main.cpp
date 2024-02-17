@@ -7,6 +7,7 @@
 #include "frame_fileindex.h"
 #include "frame_compare.h"
 #include "frame_home.h"
+#include "frame_continue.h"
 
 enum {
   kKeyFactoryTest = 0,
@@ -107,10 +108,10 @@ void key_home_cb(epdgui_args_vector_t &args) {
  * @brief Continue an existing game of chess
  */
 void key_continue_cb(epdgui_args_vector_t &args) {
-  Frame_Base *frame = EPDGUI_GetFrame("Frame_Home");
+  Frame_Base *frame = EPDGUI_GetFrame("Frame_Continue");
   if (frame == NULL) {
-    frame = new Frame_Home();
-    EPDGUI_AddFrame("Frame_Home", frame);
+    frame = new Frame_Continue();
+    EPDGUI_AddFrame("Frame_Continue", frame);
   }
   EPDGUI_PushFrame(frame);
   *((int *)(args[0])) = 0;
@@ -140,7 +141,7 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
   }
 
   // Draw the 3rd row of buttons
-  for (int i = 0; i < 4 i++) {
+  for (int i = 0; i < 4; i++) {
     _key[i + 8] = new EPDGUI_Button("ROW3", 20 + i * 136, 390, KEY_W, KEY_H);
   }
 
@@ -199,18 +200,21 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
   _key[kKeyContinue]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
   _key[kKeyContinue]->Bind(EPDGUI_Button::EVENT_RELEASED, key_continue_cb);
 
+  // New Game
   _key[kKeyNewGame]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
   *(_key[kKeyNewGame]->CanvasPressed()) = *(_key[kKeyNewGame]->CanvasNormal());
   _key[kKeyNewGame]->CanvasPressed()->ReverseColor();
   _key[kKeyNewGame]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
   _key[kKeyNewGame]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
 
+  // My Games
   _key[kKeyMyGames]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
   *(_key[kKeyMyGames]->CanvasPressed()) = *(_key[kKeyMyGames]->CanvasNormal());
   _key[kKeyMyGames]->CanvasPressed()->ReverseColor();
   _key[kKeyMyGames]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
   _key[kKeyMyGames]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
 
+  // Puzzles
   _key[kKeyPuzzles]->CanvasNormal()->pushImage(0, 0, 92, 92, ImageResource_main_icon_home_92x92);
   *(_key[kKeyPuzzles]->CanvasPressed()) = *(_key[kKeyPuzzles]->CanvasNormal());
   _key[kKeyPuzzles]->CanvasPressed()->ReverseColor();

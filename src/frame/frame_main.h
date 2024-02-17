@@ -3,7 +3,8 @@
 
 #include "frame_base.h"
 
-static int KEY_SIZE = 12;
+// This is the number of menu items that we have on the home screen
+const int KEY_SIZE = 12;
 
 class Frame_Main : public Frame_Base {
    public:
