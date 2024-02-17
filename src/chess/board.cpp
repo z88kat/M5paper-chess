@@ -66,7 +66,8 @@ void drawBoard(M5EPD_Canvas *canvas) {
   // canvas->drawString("Move: Yours", 20, startY);
 
   // draw an image to the screen piece_bb (black bishop)
-  canvas->pushImage(20, 10, 48, 48, piece_bb);
+  //  canvas->pushImage(20, 10, 48, 48, piece_bb_white);
+  // canvas->pushImage(20, 10, 48, 48, 15, piece_bb);
 
   // Push canvas to y-axis 100px from the top
   canvas->pushCanvas(0, 100, UPDATE_MODE_GC16); //
@@ -124,8 +125,16 @@ void drawPieces(M5EPD_Canvas *canvas, int x, int y) {
         // < 7 are white pieces
         // >= 7 are black pieces
 
-        // Draw the piece
-        canvas->drawString(getPiece(piece), (j * 60) + x + 10, (i * 60) + y + 20);
+        // Depending on the cell we toggle black or white background
+        if ((i + j) % 2 == 0) {
+          // Draw the piece
+          canvas->pushImage((j * 60) + x + 5, (i * 60) + y + 5, 48, 48, getPieceImageWhiteBackground(piece));
+        } else {
+          // Draw the piece
+          canvas->pushImage((j * 60) + x + 5, (i * 60) + y + 5, 48, 48, getPieceImageBlackBackground(piece));
+        }
+
+        // canvas->drawString(getPiece(piece), (j * 60) + x + 10, (i * 60) + y + 20);
         //        canvas->drawString(getPiece(piece), (i * 60) + x, (j * 60) + y);
       }
     }
@@ -164,4 +173,68 @@ String getPiece(int piece) {
   }
 
   return "";
+}
+
+// function to return the static images from imagePieces.h
+const uint8_t *getPieceImageWhiteBackground(int piece) {
+  switch (piece) {
+  case 1: // white pawn
+    return piece_bb_white;
+  case 2: // white knight
+    return piece_bb_white;
+  case 3: // white bishop
+    return piece_bb_white;
+  case 4: // white rook
+    return piece_bb_white;
+  case 5: // white queen
+    return piece_bb_white;
+  case 6: // white king
+    return piece_bb_white;
+  case 7: // black pawn
+    return piece_bb_white;
+  case 8: // black knight
+    return piece_bb_white;
+  case 9: // black bishop
+    return piece_bb_white;
+  case 10: // black rook
+    return piece_bb_white;
+  case 11: // black queen
+    return piece_bb_white;
+  case 12: // black king
+    return piece_bb_white;
+  }
+
+  return piece_bb_white;
+}
+
+// function to return the static images from imagePieces.h
+const uint8_t *getPieceImageBlackBackground(int piece) {
+  switch (piece) {
+  case 1: // white pawn
+    return piece_bb_black;
+  case 2: // white knight
+    return piece_bb_black;
+  case 3: // white bishop
+    return piece_bb_black;
+  case 4: // white rook
+    return piece_bb_black;
+  case 5: // white queen
+    return piece_bb_black;
+  case 6: // white king
+    return piece_bb_black;
+  case 7: // black pawn
+    return piece_bb_black;
+  case 8: // black knight
+    return piece_bb_black;
+  case 9: // black bishop
+    return piece_bb_black;
+  case 10: // black rook
+    return piece_bb_black;
+  case 11: // black queen
+    return piece_bb_black;
+  case 12: // black king
+    return piece_bb_black;
+  }
+
+  return piece_bb_black;
 }

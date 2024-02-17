@@ -10,5 +10,7 @@ void drawGrid(M5EPD_Canvas *canvas, int x, int y);
 
 void drawPieces(M5EPD_Canvas *canvas, int x, int y);
 String getPiece(int piece);
+const uint8_t *getPieceImageWhiteBackground(int piece);
+const uint8_t *getPieceImageBlackBackground(int piece);
 
 #endif  //_CHESS_BOARD_H_
