@@ -2,6 +2,8 @@
 #include "frame_continue.h"
 #include "../chess/board.h"
 
+M5EPD_Canvas *canvas;
+
 /**
  * First this is called, appears to be called once only
  */
@@ -20,7 +22,7 @@ Frame_Continue::Frame_Continue(void) {
 }
 
 /**
- *  Not sure when this is called
+ *  Called when we exit the page
  */
 Frame_Continue::~Frame_Continue(void) {
 
@@ -38,7 +40,7 @@ int Frame_Continue::init(epdgui_args_vector_t &args) {
   M5.EPD.Clear();
   _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
 
-  M5EPD_Canvas *canvas = new M5EPD_Canvas(&M5.EPD);
+  canvas = new M5EPD_Canvas(&M5.EPD);
 
   // Set the start 32 pixels from the top
   canvas->createCanvas(540, 960 - 100);
@@ -50,4 +52,11 @@ int Frame_Continue::init(epdgui_args_vector_t &args) {
 
   EPDGUI_AddObject(_key_exit);
   return 3;
+}
+
+int Frame_Continue::run() {
+  Frame_Base::run();
+
+  loopInteraction(canvas);
+  return 1;
 }
